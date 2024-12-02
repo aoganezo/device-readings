@@ -23,14 +23,19 @@ public class DeviceController {
 	 */
 	@PostMapping
 	public ResponseEntity postDeviceReadings(@RequestBody DeviceReadingRequest deviceReadings) throws Exception {
-		return ResponseEntity.ok().build();
-		// TODO: Error Handling. Store data.
+		try {
+			deviceService.updateDeviceReadings(deviceReadings);
+			return ResponseEntity.ok().build();
+		} catch (Exception e) {
+			// TODO: Better error handling. Store data.
+			throw e;
+		}
 	}
 
 	/**
 	 * Retrieves the device if it exists in h2 and returns the latest timestamp, otherwise returns an Exception and logs it.
 	 *
-	 * @param deviceId - A string representing hte UUID for the device.
+	 * @param deviceId - A string representing the UUID for the device.
 	 * @return TimestampResponse - an object containing the latest timestamp.
 	 */
 	@GetMapping("/{deviceId}/latest/timestamp")
@@ -42,7 +47,7 @@ public class DeviceController {
 	/**
 	 * Retrieves the device if it exists in h2 and returns the count of records, otherwise returns an Exception and logs it.
 	 *
-	 * @param deviceId - A string representing hte UUID for the device.
+	 * @param deviceId - A string representing the UUID for the device.
 	 * @return CumulativeCountResponse - an object containing the cumulative count of records
 	 */
 	@GetMapping("/{deviceId}/count")

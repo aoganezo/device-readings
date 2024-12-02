@@ -1,8 +1,8 @@
 package bright.device.reader.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public record DeviceReading(
-        LocalDateTime timestamp,
+        Date timestamp,
         int count
 ) { }
