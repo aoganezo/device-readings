@@ -16,7 +16,7 @@ public class DeviceController {
 	DeviceService deviceService;
 
 	/**
-	 * Retrieves the document if it exists in h2, otherwise returns an Exception and logs it.
+	 * Pushes device reading data to tne h2 database; returns an HTTP 400 and logs it upon failure.
 	 *
 	 * @param deviceReadings - a list of readings for a given device.
 	 * @return ResponseEntity, HTTPStatus
@@ -27,8 +27,7 @@ public class DeviceController {
 			deviceService.updateDeviceReadings(deviceReadings);
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
-			// TODO: Better error handling. Store data.
-			throw e;
+			return ResponseEntity.internalServerError().body("An error occurred while processing your request.");
 		}
 	}
 
@@ -39,9 +38,12 @@ public class DeviceController {
 	 * @return TimestampResponse - an object containing the latest timestamp.
 	 */
 	@GetMapping("/{deviceId}/latest/timestamp")
-	public ResponseEntity<TimestampResponse> getLatestTimestampForDevice(@PathVariable String deviceId) throws Exception {
-		return ResponseEntity.ok().body(deviceService.getLatestTimestamp(deviceId));
-		// TODO: Error Handling
+	public ResponseEntity getLatestTimestampForDevice(@PathVariable String deviceId) throws Exception {
+		try {
+			return ResponseEntity.ok().body(deviceService.getLatestTimestamp(deviceId));
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().body("An error occurred while processing your request.");
+		}
 	}
 
 	/**
@@ -51,8 +53,11 @@ public class DeviceController {
 	 * @return CumulativeCountResponse - an object containing the cumulative count of records
 	 */
 	@GetMapping("/{deviceId}/count")
-	public ResponseEntity<CumulativeCountResponse> getReadingCountForDevice(@PathVariable String deviceId) throws Exception {
-		return ResponseEntity.ok().body(deviceService.getReadingCount(deviceId));
-		// TODO: Error Handling
+	public ResponseEntity getReadingCountForDevice(@PathVariable String deviceId) {
+		try {
+			return ResponseEntity.ok().body(deviceService.getReadingCount(deviceId));
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().body("An error occurred while processing your request.");
+		}
 	}
 }
