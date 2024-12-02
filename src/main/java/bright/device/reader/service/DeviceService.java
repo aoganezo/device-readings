@@ -6,6 +6,8 @@ import bright.device.reader.model.DeviceReadingRequest;
 import bright.device.reader.model.TimestampResponse;
 import bright.device.reader.repository.DeviceReadingsRepository;
 import bright.device.reader.repository.entity.DeviceReadingEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.util.List;
 
 @Service
 public class DeviceService {
+
+    private static final Logger log = LoggerFactory.getLogger(DeviceService.class);
 
     @Autowired
     DeviceReadingsRepository deviceRepository;
@@ -43,11 +47,14 @@ public class DeviceService {
             Date readingTimestamp = deviceReading.timestamp();
             // ignore timestamp duplicates
             if (timestamps.contains(readingTimestamp)) {
+                log.info("skipped {} device readings because its a duplicate.", deviceReading.count());
                 continue;
             }
             timestamps.add(readingTimestamp);
             deviceReadingEntities.add(new DeviceReadingEntity(deviceId, deviceReading.count(), readingTimestamp));
         }
         deviceRepository.saveAll(deviceReadingEntities);
+        log.debug("Saved {} device readings for deviceId {}.", timestamps.size(), deviceId);
+
     }
 }

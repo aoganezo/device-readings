@@ -51,3 +51,9 @@ directory holds the main service code and its properties. In `src/main/java/brig
 - model: holds our data model for requests and responses.
 - repository: holds our database repository and the code we use to interface with it, along with the database entities (separate from the data models).
 - service: holds our services for business logic.
+
+### With more time
+If time was not a constraint, then some more things to cover would be:
+- unit and integration testing
+- more specific error handling and logging
+- better naming conventions
